@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/Rushi2398/Go-JWT/database"
@@ -14,7 +15,13 @@ func main() {
 	if port == "" {
 		port = "8000"
 	}
-	userCollection := database.OpenCollection(database.Client, "user")
+
+	client, err := database.ConnectMongo(os.Getenv("MONGODB_URL"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	userCollection := database.OpenCollection(client, os.Getenv("MONGODB_NAME"), "user")
 	database.CreateUserIndexes(userCollection)
 
 	router := gin.New()

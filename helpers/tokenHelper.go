@@ -6,7 +6,6 @@ import (
 	"os"
 	"time"
 
-	database "github.com/Rushi2398/Go-JWT/database"
 	"github.com/golang-jwt/jwt/v4"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -22,8 +21,6 @@ type SignedDetails struct {
 	User_type  string
 	jwt.RegisteredClaims
 }
-
-var userCollection *mongo.Collection = database.OpenCollection(database.Client, "user")
 
 var SECRET_KEY string = os.Getenv("SECRET_KEY")
 
@@ -88,7 +85,7 @@ func ValidateToken(signedToken string) (claims *SignedDetails, msg string) {
 	return claims, msg
 }
 
-func UpdateAllTokens(signedToken string, signedRefreshToken string, userId string) {
+func UpdateAllTokens(signedToken string, signedRefreshToken string, userId string, userCollection *mongo.Collection) {
 	c, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	var updateObj primitive.D

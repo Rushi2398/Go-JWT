@@ -130,7 +130,7 @@ func Login(userCollection *mongo.Collection) gin.HandlerFunc {
 			return
 		}
 
-		helper.UpdateAllTokens(token, refreshToken, foundUser.User_id)
+		helper.UpdateAllTokens(token, refreshToken, foundUser.User_id, userCollection)
 		err = userCollection.FindOne(c, bson.M{"user_id": foundUser.User_id}).Decode(&foundUser)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

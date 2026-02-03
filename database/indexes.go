@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -10,8 +9,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func CreateUserIndexes(userCollection *mongo.Collection) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+func CreateUserIndexes(ctx context.Context, userCollection *mongo.Collection) error {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 
 	indexes := []mongo.IndexModel{
@@ -26,9 +25,8 @@ func CreateUserIndexes(userCollection *mongo.Collection) {
 	}
 
 	_, err := userCollection.Indexes().CreateMany(ctx, indexes)
-	if err != nil {
-		log.Fatal("failed to create user indexes:", err)
-	}
-
-	log.Println("✅ MongoDB user indexes ensured")
+	return err
+	// if err != nil {
+	// 	log.Fatal("failed to create user indexes:", err)
+	// }
 }

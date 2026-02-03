@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"fmt"
-	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -15,7 +14,7 @@ func ConnectMongo(uri string) (*mongo.Client, error) {
 	defer cancel()
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	//Verify Connection
 	if err := client.Ping(ctx, nil); err != nil {
